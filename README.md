@@ -14,6 +14,8 @@ We can store our code (stata files, markdown, latex etc.) here.
   - Revisions will be returned a week after submission. 
 - Monday, May 2
   - Final draft due. 
+- Tuesday, May 3, 9-12
+  - Present to class. 
 
 ---
 
