@@ -6,6 +6,15 @@ A repo to keep track of work on the final project for Robert Johnson's intro to 
 We can store our code (stata files, markdown, latex etc.) here. 
 
 ---
+## Action Plan: 
+
+- Thursday, March 31 @ 12:00pm
+    - Idealy we woud come back with (but life happens): 
+        - project descriptions read, 
+        - reference papers skimmed
+        - data roughly explored. 
+
+---
 
 ## Due Dates: 
 
