@@ -2,8 +2,14 @@
 
 A repo to keep track of work on the final project for Robert Johnson's intro to regression class/
 
-
 We can store our code (stata files, markdown, latex etc.) here. 
+
+## Objective
+> The objective of this review is to retrospectively determine if IVFE has an adverse effect on outcomes in critically ill patients.
+
+##Study design:
+> This is a retrospective review of patients with a prolonged ICU stay defined as > 3 days in ICU. We will determine if the amount of IVFE received during the first three days of admission to the surgical ICU (SICU) is associated with several outcomes (controlling for other covariates as needed).
+
 
 ---
 ## Action Plan: 
@@ -34,3 +40,4 @@ We can store our code (stata files, markdown, latex etc.) here.
 2. Make your changes. 
 3. git add, commit and push them to your private repo
 4. Send a pull request through github and we can integrate it into the master repo. 
+op
