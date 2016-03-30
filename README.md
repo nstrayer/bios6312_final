@@ -11,7 +11,7 @@ We can store our code (stata files, markdown, latex etc.) here.
 > This is a retrospective review of patients with a prolonged ICU stay defined as > 3 days in ICU. We will determine if the amount of IVFE received during the first three days of admission to the surgical ICU (SICU) is associated with several outcomes (controlling for other covariates as needed).
 
 
----
+
 ## Action Plan: 
 
 - Thursday, March 31 @ 12:00pm
@@ -20,7 +20,7 @@ We can store our code (stata files, markdown, latex etc.) here.
         - reference papers skimmed
         - data roughly explored. 
 
----
+
 
 ## Due Dates: 
 
@@ -32,7 +32,7 @@ We can store our code (stata files, markdown, latex etc.) here.
 - Tuesday, May 3, 9-12
   - Present to class. 
 
----
+
 
 ## Protocol for using repo: 
 
