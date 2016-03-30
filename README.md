@@ -14,7 +14,12 @@ We can store our code (stata files, markdown, latex etc.) here.
 
 ## Action Plan: 
 
-- Thursday, March 31 @ 12:00pm
+- Thursday, March 31 @ 10:00am  
+    - Go over and decide which variables we want to look at. 
+        - Which are interesting, which are probably confounding, etc.
+    - Run preliminary regressions. 
+    - Write intro together. 
+    - Decide next steps. 
     - Idealy we woud come back with (but life happens): 
         - project descriptions read, 
         - reference papers skimmed
