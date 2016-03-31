@@ -15,3 +15,12 @@ hist(data$lipids)
 #more people did not recieve them than recieved them. 
 
 #write.csv(data, "/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/nick_cleaned.csv")
+
+summary(data[, y_n_cols])
+
+
+controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
+
+plot(data[, controls])
+
+summary(lm(data$apache2 ~ data$age))
