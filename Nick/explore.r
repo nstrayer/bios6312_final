@@ -18,9 +18,3 @@ hist(data$lipids)
 
 summary(data[, y_n_cols])
 
-
-controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
-
-plot(data[, controls])
-
-summary(lm(data$apache2 ~ data$age))

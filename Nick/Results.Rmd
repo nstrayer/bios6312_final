@@ -1,0 +1,157 @@
+---
+title: "Lipids Exploration"
+author: "Nick Strayer"
+date: "April 4, 2016"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+```{r, echo = FALSE, warning=FALSE}
+library(ggplot2)
+library(knitr)
+```
+
+First we read data in 
+```{r}
+data <- read.csv("/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/ivfedata-2013_full.csv")
+```
+
+Now we recode the columns whos values are simply Ys and Ns to 1 and 0s respectively. 
+```{r}
+#y n columns
+y_n_cols <- c("hosp.death","unit.death", "bsi.inf","eent.inf","gi.inf","lri.inf","pneu.inf","ssi.inf","sst.inf","sys.inf","uti.inf")
+
+#recode y and n values to 0=N, 1 = Y. 
+data[, y_n_cols] = ifelse(data[, y_n_cols] == "N", 0, 1)
+```
+
+We have a large portion of lipids users who have no exposure. 
+```{r}
+ggplot(data, aes(avgexp)) + geom_histogram(binwidth = 0.05)
+```
+
+Because of this we will dichotomize on the exposure variable for logistic regression. 
+
+```{r}
+#make a binary column for if the patient recieved lipids during stay. 
+data$lipids = ifelse(data$avgexp >  0.0, 1, 0)
+```
+
+Now we check to see what the distribution of lipid use is. 
+
+```{r}
+ggplot(data, aes(x = factor(lipids))) + geom_bar(stat = "count") + labs(x = "Lipid Exposure")
+```
+
+So we can see more people did not recieve them than recieved them. 
+
+```{r}
+kable(summary(data[, y_n_cols]))
+```
+
+## Descriptive Statistics of Patients. 
+
+First a quick function to generate a nice table output of `summary`. 
+```{r}
+#this is tedious
+summaryTable <- function(variable){ kable(as.data.frame(as.list(summary(variable)))) }
+```
+### Ages
+```{r}
+summaryTable(data$age)
+ggplot(data, aes(age)) + geom_histogram(binwidth = 2) + labs(x = "age")
+```
+
+---
+
+### Gender
+```{r}
+summaryTable(data$gender)
+ggplot(data, aes(x = factor(gender))) + geom_bar(stat = "count") + labs(x = "gender")
+```
+
+---
+
+
+### Race
+```{r}
+#recode the ? race to unknown.
+data[data$race == "?", "race"] = "UNKNOWN" 
+
+summaryTable(data$race)
+ggplot(data, aes(x = factor(race))) + geom_bar(stat = "count") + labs(x = "race")
+```
+
+---
+
+
+### BMI
+```{r}
+summaryTable(data$bmi)
+ggplot(data, aes(bmi)) + geom_histogram(binwidth = 3)
+```
+
+---
+
+
+### Hospital Length of Stay
+```{r}
+summaryTable(data$hosp.los)
+ggplot(data, aes(hosp.los)) + geom_histogram(binwidth = 3) + labs(x = "length of stay")
+```
+
+---
+
+
+### Unit Length of Stay
+```{r}
+summaryTable(data$unit.los)
+ggplot(data, aes(unit.los)) + geom_histogram(binwidth = 3) + labs(x = "length of stay")
+```
+
+---
+
+
+### Hospital Deaths
+```{r}
+summaryTable(data$hosp.death)
+ggplot(data, aes(x = factor(hosp.death))) + geom_bar(stat = "count") + labs(x = "Death")
+```
+
+A much greater amount of people didn't die. 
+
+---
+
+
+### Time on Ventilator
+```{r}
+summaryTable(data$ventdays.unit)
+ggplot(data, aes(ventdays.unit)) + geom_histogram(binwidth = 3) + labs(x = "time on ventilator")
+```
+
+---
+
+
+### Apache Score. 
+```{r}
+summaryTable(data$apache2)
+ggplot(data, aes(apache2)) + geom_histogram(binwidth = 1) + labs(x = "APACHE score")
+```
+
+
+```{r, fig.width=10, fig.height=9}
+demoCols  <- c("avgexp",	"age",	"gender",	"bmi",	"hosp.los",	"hosp.death",	"ventdays.hosp",	"ventfree.unit",	"apache2")
+
+plot(data[,demoCols])
+```
+
+```{r, eval = FALSE}
+controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
+
+plot(data[, controls])
+
+summary(lm(data$apache2 ~ data$age))
+
+table(data$apache2)
+```
