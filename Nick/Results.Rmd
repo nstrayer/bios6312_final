@@ -10,6 +10,7 @@ output:
 ```{r, echo = FALSE, warning=FALSE}
 library(ggplot2)
 library(knitr)
+library(pastecs)
 ```
 
 First we read data in 
@@ -161,7 +162,6 @@ plot(data[, controls])
 
 
 ## Outcomes plot: 
-
 ```{r, fig.width=7, fig.height=5.5}
 library(reshape)
 tp <- melt(data[, y_n_cols])
@@ -170,7 +170,25 @@ ggplot(data.frame(table(tp)), aes(x = 1, y = Freq, fill = value)) +
   facet_wrap( ~ variable) + labs(x = "")
 ```
 
-
+## Table of Descriptive Statistics
 ```{r}
-summary(lm(data$apache2 ~ data$age))
+continiuousVariables1 = c("avgexp", "maxexp", "age", "bmi", "hosp.los", "unit.los") 
+continiuousVariables2 = c("ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2", "glucose" ) 
+
+options(digits=2)
+kable(stat.desc(data[, continiuousVariables1], basic=F))
+kable(stat.desc(data[, continiuousVariables2], basic=F))
+```
+
+## Plot of histograms
+```{r, warning=FALSE,fig.width=10, fig.height=9}
+cvs= c("avgexp", "maxexp", "age", "bmi", "hosp.los", "unit.los",
+                          "ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2", "glucose" ) 
+cvplot <- data[, cvs]
+cvplot <- melt(cvplot)
+
+ggplot(cvplot, aes(value)) +
+  geom_histogram(aes(y =..density..), col="black", alpha = 0.5) + 
+  facet_wrap(~variable, scales = "free") + 
+  geom_density(color = "steelblue")
 ```
