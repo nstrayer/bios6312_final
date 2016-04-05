@@ -112,6 +112,13 @@ ggplot(data, aes(unit.los)) + geom_histogram(binwidth = 3) + labs(x = "length of
 
 ---
 
+### Glucose
+```{r}
+summaryTable(data$glucose)
+ggplot(data, aes(glucose)) + geom_histogram(binwidth = 10) + labs(x = "glucose level")
+```
+
+---
 
 ### Hospital Deaths
 ```{r}
@@ -139,19 +146,31 @@ summaryTable(data$apache2)
 ggplot(data, aes(apache2)) + geom_histogram(binwidth = 1) + labs(x = "APACHE score")
 ```
 
-
+### Looking at relationships between variables. 
 ```{r, fig.width=10, fig.height=9}
 demoCols  <- c("avgexp",	"age",	"gender",	"bmi",	"hosp.los",	"hosp.death",	"ventdays.hosp",	"ventfree.unit",	"apache2")
 
 plot(data[,demoCols])
 ```
 
-```{r, eval = FALSE}
+Same thing but with the variables we chose as controls in our regressions. 
+```{r, fig.width=10, fig.height=9}
 controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
-
 plot(data[, controls])
+```
 
+
+## Outcomes plot: 
+
+```{r, fig.width=7, fig.height=5.5}
+library(reshape)
+tp <- melt(data[, y_n_cols])
+ggplot(data.frame(table(tp)), aes(x = 1, y = Freq, fill = value)) + 
+  geom_bar(stat="identity", position=position_stack()) + 
+  facet_wrap( ~ variable) + labs(x = "")
+```
+
+
+```{r}
 summary(lm(data$apache2 ~ data$age))
-
-table(data$apache2)
 ```
