@@ -10,7 +10,22 @@ We can store our code (stata files, markdown, latex etc.) here.
 ##Study design:
 > This is a retrospective review of patients with a prolonged ICU stay defined as > 3 days in ICU. We will determine if the amount of IVFE received during the first three days of admission to the surgical ICU (SICU) is associated with several outcomes (controlling for other covariates as needed).
 
+##Variable selection Notes:
 
+- Add `ventdays` to 
+    - Pneumonia
+    - LRI
+- Add the length (`hoslos`) of stay variables in the regressions for
+    - Pneumonia
+    - Surgical Site
+    - Blood infection
+    - This will be addressed in the limitations due to the chicken and egg problem. 
+- Remove `race`. 
+
+## Model assembly
+- Run models on dichotmous lipids variable
+- Find significant infections
+- Run second stage continious lipids analysis on significant infections. 
 
 ## Action Plan: 
 
@@ -24,8 +39,15 @@ We can store our code (stata files, markdown, latex etc.) here.
         - project descriptions read, 
         - reference papers skimmed
         - data roughly explored. 
-
-
+- Thursday, April 7
+    - Nick
+        - Make forest plot code. 
+    - Lisa
+        - secondary model stuff
+    - Matthew
+        - secondary model stuff
+    - All
+        - Write bullet points for all sections
 
 ## Due Dates: 
 
