@@ -1,0 +1,124 @@
+---
+title: "miscelaneus code"
+author: "Nick Strayer"
+date: "April 5, 2016"
+output: pdf_document
+---
+
+Old code that I decided to leave out of the main explore markdown but we may desire again later. 
+
+We have a large portion of lipids users who have no exposure. 
+```{r}
+ggplot(data, aes(avgexp)) + geom_histogram(binwidth = 0.05)
+```
+
+Now we check to see what the distribution of lipid use is. 
+
+```{r}
+ggplot(data, aes(x = factor(lipids))) + geom_bar(stat = "count") + labs(x = "Lipid Exposure")
+```
+
+
+
+
+So we can see more people did not recieve them than recieved them. 
+
+```{r}
+kable(summary(data[, y_n_cols]))
+```
+
+
+## Descriptive Statistics of Patients. 
+
+First a quick function to generate a nice table output of `summary`. 
+```{r}
+#this is tedious
+summaryTable <- function(variable){ kable(as.data.frame(as.list(summary(variable)))) }
+```
+### Ages
+```{r}
+summaryTable(data$age)
+ggplot(data, aes(age)) + geom_histogram(binwidth = 2) + labs(x = "age")
+```
+
+---
+
+### Gender
+```{r}
+summaryTable(data$gender)
+ggplot(data, aes(x = factor(gender))) + geom_bar(stat = "count") + labs(x = "gender")
+```
+
+---
+
+
+### Race
+```{r}
+#recode the ? race to unknown.
+data[data$race == "?", "race"] = "UNKNOWN" 
+
+summaryTable(data$race)
+ggplot(data, aes(x = factor(race))) + geom_bar(stat = "count") + labs(x = "race")
+```
+
+---
+
+
+### BMI
+```{r}
+summaryTable(data$bmi)
+ggplot(data, aes(bmi)) + geom_histogram(binwidth = 3)
+```
+
+---
+
+
+### Hospital Length of Stay
+```{r}
+summaryTable(data$hosp.los)
+ggplot(data, aes(hosp.los)) + geom_histogram(binwidth = 3) + labs(x = "length of stay")
+```
+
+---
+
+
+### Unit Length of Stay
+```{r}
+summaryTable(data$unit.los)
+ggplot(data, aes(unit.los)) + geom_histogram(binwidth = 3) + labs(x = "length of stay")
+```
+
+---
+
+### Glucose
+```{r}
+summaryTable(data$glucose)
+ggplot(data, aes(glucose)) + geom_histogram(binwidth = 10) + labs(x = "glucose level")
+```
+
+---
+
+### Hospital Deaths
+```{r}
+summaryTable(data$hosp.death)
+ggplot(data, aes(x = factor(hosp.death))) + geom_bar(stat = "count") + labs(x = "Death")
+```
+
+A much greater amount of people didn't die. 
+
+---
+
+
+### Time on Ventilator
+```{r}
+summaryTable(data$ventdays.unit)
+ggplot(data, aes(ventdays.unit)) + geom_histogram(binwidth = 3) + labs(x = "time on ventilator")
+```
+
+---
+
+### Apache Score. 
+```{r}
+summaryTable(data$apache2)
+ggplot(data, aes(apache2)) + geom_histogram(binwidth = 1) + labs(x = "APACHE score")
+```
