@@ -6,7 +6,6 @@
 *-------------------------------------------------------------------------------
 clear all
 import delimited "/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/ivfedata-2013_full.csv", varnames(1) clear
-
 *-------------------------------------------------------------------------------
 * Some data recoding. 2 lines in R. 
 *-------------------------------------------------------------------------------
@@ -75,6 +74,10 @@ encode race, generate(race2) label(race2)
 // Generate a boolean lipids result. It is notable that this isnt neccesary
 // as stata treats anything > 
 gen lipids = avgexp > 0.0
+
+gen lipidsCat = 0 if avgexp == 0
+replace lipidsCat = 1 if avgexp < 0.314 & avgexp != 0
+replace lipidsCat = 2 if avgexp > 0.314
 *-------------------------------------------------------------------------------
 * End of data recoding. 
 *-------------------------------------------------------------------------------
@@ -99,5 +102,31 @@ lroc, name(uti) title("uti") nodraw
 
 logistic death lipids bmi glucose apache2 i.race2 i.gender2 age
 lroc, name(death) title("death") 
+
+graph combine bsi gi lri pneu ssi uti
+
+*-------------------------------------------------------------------------------
+
+
+logistic bsi i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(bsi) title("bsi") nodraw
+
+logistic gi i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(gi) title("gi") nodraw
+
+logistic lri i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(lri) title("lri") nodraw
+
+logistic pneu i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(pneu) title("pneu") nodraw
+
+logistic ssi i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(ssi) title("ssi") nodraw
+
+logistic uti i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(uti) title("uti") nodraw
+
+logistic death i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+lroc, name(death) title("death") nodraw
 
 graph combine bsi gi lri pneu ssi uti

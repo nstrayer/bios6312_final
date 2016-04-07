@@ -1,6 +1,6 @@
 # bios6312_final
 
-A repo to keep track of work on the final project for Robert Johnson's intro to regression class/
+A repo to keep track of work on the final project for Robert Johnson's intro to regression class. 
 
 We can store our code (stata files, markdown, latex etc.) here. 
 
@@ -21,33 +21,32 @@ We can store our code (stata files, markdown, latex etc.) here.
     - Blood infection
     - This will be addressed in the limitations due to the chicken and egg problem. 
 - Remove `race`. 
+- For pneumonia we are using `unitlos` over `hoslos` as it is more predictive (greater correlation). 
+
+
+## Model Notes
+
+- Of 6 infections, 4 have significant risks from the dichotomized lipids consumption. 
+- Look into including odds ratio results for different types of models. (E.g. ones with infections as predictors and ones without). 
+
 
 ## Model assembly
+
 - Run models on dichotmous lipids variable
 - Find significant infections
 - Run second stage continious lipids analysis on significant infections. 
 
+
 ## Action Plan: 
 
-- Thursday, March 31 @ 10:00am  
-    - Go over and decide which variables we want to look at. 
-        - Which are interesting, which are probably confounding, etc.
-    - Run preliminary regressions. 
-    - Write intro together. 
-    - Decide next steps. 
-    - Idealy we woud come back with (but life happens): 
-        - project descriptions read, 
-        - reference papers skimmed
-        - data roughly explored. 
-- Thursday, April 7
+- Tuesday April 12
     - Nick
-        - Make forest plot code. 
-    - Lisa
-        - secondary model stuff
+        - Run described models and generate forest plot. 
+        - Source of data. 
     - Matthew
-        - secondary model stuff
-    - All
-        - Write bullet points for all sections
+        - Introduction. 
+    - Lisa
+        - Write methods. 
 
 ## Due Dates: 
 
@@ -60,11 +59,34 @@ We can store our code (stata files, markdown, latex etc.) here.
   - Present to class. 
 
 
-
 ## Protocol for using repo: 
 
 1. Fork repo (upper right corner of this screen)
 2. Make your changes. 
 3. git add, commit and push them to your private repo
 4. Send a pull request through github and we can integrate it into the master repo. 
-op
+
+
+# The Models
+
+All models control for `lipid, bmi, glucose, apache, gender, age`
+
+Secondary model controls for other infections. 
+
+- blood
+    - total vent days. 
+    - length of stay
+- gastro
+    - total vent days. 
+    - length of stay
+- lower resp
+    - vent days
+- pneumonia
+    - vent days
+    - unit los
+- surgical site
+- uti
+    - hops length
+- death
+
+

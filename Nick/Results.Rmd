@@ -111,3 +111,17 @@ Same thing but with the variables we chose as controls in our regressions.
 controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
 plot(data[, controls])
 ```
+
+## Odds ratio plot
+
+```{r}
+variable = c("bmi", "glucose", "apache2", "race", "gender", "age")
+upper    = rnorm(length(variable))
+pe       = upper - abs(rnorm(length(variable)))
+lower    = pe - abs(rnorm(length(variable)))
+res      = data.frame(variable, upper, pe, lower)
+
+ggplot(res, aes(x = variable, ymin = lower, y = pe, ymax = upper)) + 
+  geom_pointrange() + geom_hline(yintercept = 1) + 
+  labs(x = "", y = "95% CI") + coord_flip() 
+```
