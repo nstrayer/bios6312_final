@@ -117,7 +117,7 @@ lroc, name(gi) title("gi") nodraw
 logistic lri i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
 lroc, name(lri) title("lri") nodraw
 
-logistic pneu i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
+logistic pneu i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age v
 lroc, name(pneu) title("pneu") nodraw
 
 logistic ssi i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
@@ -130,3 +130,12 @@ logistic death i.lipidsCat bmi glucose apache2 i.race2 i.gender2 age
 lroc, name(death) title("death") nodraw
 
 graph combine bsi gi lri pneu ssi uti
+
+*-------------------------------------------------------------------------------
+
+logistic Bsiinf i.indicator bmi glucose apache2 i.Gender age i.Giinf i.Lriinf i.Pneuinf i.Ssiinf i.Utiinf ventdaysunit ventdayshosp unitlos
+logistic Lriinf i.indicator bmi glucose apache2 i.Gender age venttotal
+logistic Pneuinf i.indicator bmi glucose apache2 i.Gender age venttotal unitlos
+logistic Giinf i.indicator bmi glucose apache2 i.Gender age i.Lriinf i.Bsiinf i.Pneuinf i.Utiinf unitlos hosplos ventdaysunit ventdayshosp 
+logistic Ssiinf i.indicator bmi glucose apache2 i.Gender age i.Lriinf i.Bsiinf i.Pneuinf i.Utiinf 
+logistic Utiinf i.indicator bmi glucose apache2 i.Gender age 

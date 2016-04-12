@@ -1,0 +1,61 @@
+---
+title: "Source of Data"
+author: "Nick Strayer"
+date: "April 11, 2016"
+output:
+  pdf_document:
+    fig_height: 3
+    fig_width: 5
+---
+```{r, echo=FALSE,warning=FALSE}
+library(knitr)
+```
+
+> Source of the Data: Describe the source and how the data were gathered, if known. Describe the variables that are available and their meaning for the analysis. Highlight patterns of missing data, if any, as well as possible confounding by measured or unmeasured variables. This should not be a detailed presentation of descriptive statistics, however. That will come under Results.
+
+These data are a retrospective look at hospital patients, from the years 2001 to 2005, who had a stay in the surgical intensive care unit (SICU) of three or more days. 
+
+The following were datapoints collected and available for the analysis. There were no missing data for any of the variables except for 59 unrecorded values for race.  
+
+```{r,echo=FALSE}
+data <- read.csv("/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/ivfedata-2013_full.csv")
+
+
+# sapply(data, function(c){sum(is.na(c))})
+Variables <- data.frame(avgexp = "Average amount of soybean oil IVFE received by the patient during the first 3 days of their SICU stay", 
+                        maxexp = "Maximum daily IVFE received by the patient during the first 3 days of their SICU stay", 
+                        age = "Age in years", 
+                        gender = "Gender",
+                        race = "Race", 
+                        bmi = "Body mass index (weight divided by height squared)",
+                        apache2 = "Apache 2 score at admission; a disease severity score",
+                        glucose = "Blood glucose level at admission", 
+                        hosp.los = "Hospital length of stay",
+                        hosp.death = "Indicator of death in the hospital", 
+                        unit.los = "Length of stay in the surgical ICU", 
+                        unit.death = "Indicator of death in the surgical ICU", 
+                        ventdays.hosp = "Days spent on ventilator while in hospital", 
+                        ventdays.unit = "Days spent on ventilator while in surgical ICU",
+                        ventfree.unit = "Days not on the ventilator while in the surgical ICU", 
+                        bsi.inf = "Bloodstream infection", 
+                        eent.inf = "Eye, ear, nose, throat infection", 
+                        gi.inf = "GI infection", 
+                        lri.inf = "Lower respiratory infection", 
+                        pneu.inf = "Pneumonia", 
+                        ssi.inf = "Surgical site infection", 
+                        sst.inf = "Skin structure infection", 
+                        sys.inf = "Systemic infection", 
+                        uti.inf = "Urinary tract infection")
+# rownames(Variables) = c("Variable", "Description")
+
+Variables = as.data.frame(t(Variables))
+Variables$Variable <- rownames(Variables)
+rownames(Variables) <- NULL
+colnames(Variables) <- c("Description", "Variable")
+kable(Variables[,c("Variable", "Description")])
+```
+
+*For the outcomes of blood and gastro-intestinal infection, total ventilator days and length of stay are potential confounders. This is due to the nature of hospital transmitted diseases[CITATION]. For lower resperatory infection ventilator days was considered a confounder.*
+
+Potential confounders for infection outcomes: total ventilator days (blood, gastrointenstinal, lower-resperatory, pnuemonia), length of stay (blood, gastrointenstinal), unit length of stay (pnuemonia), hospital length of stay (Urinary Tract).
+
