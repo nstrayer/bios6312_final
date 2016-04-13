@@ -2,18 +2,32 @@
 title: "Source of Data"
 author: "Nick Strayer"
 date: "April 11, 2016"
+bibliography: bibliography.bib
 output:
   pdf_document:
     fig_height: 3
     fig_width: 5
 ---
+
 ```{r, echo=FALSE,warning=FALSE}
 library(knitr)
 ```
 
-> Source of the Data: Describe the source and how the data were gathered, if known. Describe the variables that are available and their meaning for the analysis. Highlight patterns of missing data, if any, as well as possible confounding by measured or unmeasured variables. This should not be a detailed presentation of descriptive statistics, however. That will come under Results.
+## Introduction and Background
 
-These data are patients with a stay of three or more days in the surgical intensive care unit (SICU) from the years 2001 to 2005.
+Lipid emulsions are a means to provide nutrients to patients that are unable to eat due to severe trauma or prolonged sedation by delivering essential fatty acids intravenously 1. Lipid emulsions have also proved an effective therapy for cardiovascular collapse onset by an overdose of local anesthetic2. Previous studies establish that lipid emulsions can increase the risk for complicating infections for small prospectively selected cohorts of patients by as much as a factor of five1, 3, 4.  This study seeks to establish if lipid emulsions should be withheld as a therapy of last resort.
+  
+The negative side effects of lipid emulsions manifest themselves in different ways. The mechanisms range from acting as an immunosuppressant in patients with severe trauma3, 5 to rendering patients hyperglycemic, which is well correlated with increased infection risk4. The lipid emulsion formula can promote the growth of blood based, gastrointestinal, repertory, and skin site bacterial infections1, 6, 7. Infection rates can differ based on the formulation of the emulsion, whether it be soy based, coconut based, olive based, or fish based5. The flow rate of an emulsion also may affect infection rates4. 
+  
+The state of current research establishes that the use of a lipid emulsion, its chemical composition, and its flow rate all may play a factor in patient complications. This study aims to answer how the use of soy based lipid emulsion affects the rates of acquiring different etiological categories of infection. It will also explore the extent to which the flow rate of an emulsion affects infection rate. 
+
+__To come, last paragraph of intro on methods__
+
+---
+
+## Source of Data
+
+These data are a retrospective look at hospital patients, from the years 2001 to 2005, who had a stay in the surgical intensive care unit (SICU) of three or more days. 
 
 The following were datapoints collected and available for the analysis. There were no missing data for any of the variables except for 59 unrecorded values for race.  
 
@@ -58,4 +72,11 @@ kable(Variables[,c("Variable", "Description")])
 *For the outcomes of blood and gastro-intestinal infection, total ventilator days and length of stay are potential confounders. This is due to the nature of hospital transmitted diseases[CITATION]. For lower resperatory infection ventilator days was considered a confounder.*
 
 Potential confounders for infection outcomes: total ventilator days (blood, gastrointenstinal, lower-resperatory, pnuemonia), length of stay (blood, gastrointenstinal), unit length of stay (pnuemonia), hospital length of stay (Urinary Tract).
+
+
+This is a sample paragraph that needs a citation [@wanten2007immune]
+
+
+
+# References
 

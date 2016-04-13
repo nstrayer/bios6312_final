@@ -121,7 +121,34 @@ pe       = upper - abs(rnorm(length(variable)))
 lower    = pe - abs(rnorm(length(variable)))
 res      = data.frame(variable, upper, pe, lower)
 
-ggplot(res, aes(x = variable, ymin = lower, y = pe, ymax = upper)) + 
+oddsRatios = data.frame("OR" = numeric(), "LB" = numeric(), "UB" = numeric())
+bsi  = c(1.854255,  1.034365, 3.324032)
+lri  = c(12.99292,  2.882816, 58.55939)
+pneu = c(1.500226, .9861769, 2.282224)
+gi   = c(3.498232, 1.746571, 7.006658)
+ssi  = c(2.644907, 1.468381, 4.764111)
+# oddsRatios = rbind(oddsRatios, bsi, lri, pneu, gi,ssi)
+# oddsRatios$infection = c( "bsi", "lri", "pneu", "gi","ssi")
+# names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
+
+oddsRatios = rbind(oddsRatios, bsi, pneu, gi,ssi)
+oddsRatios$infection = c( "bsi", "pneu", "gi","ssi")
+names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
+
+ggplot(oddsRatios, aes(x = Infection, ymin = LB, y = OR, ymax = UB)) + 
   geom_pointrange() + geom_hline(yintercept = 1) + 
-  labs(x = "", y = "95% CI") + coord_flip() 
+  labs(x = "", y = "95% CI", title = "Odds Ratios for Infections") + 
+  coord_flip() 
+```
+
+```{r}
+cvs <- c("lipids", "avgexp", "maxexp", "age", "bmi", "glucose" , "hosp.los", "unit.los",
+                          "ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2") 
+cvplot <- data[, cvs]
+cvplot <- melt(cvplot, id = "lipids")
+
+ggplot(cvplot, aes(value)) +
+  geom_histogram(aes(y =..density..), col="black", alpha = 0.5) + 
+  facet_grid(lipids~variable, scales = "free") + 
+  geom_density(color = "steelblue")
 ```
