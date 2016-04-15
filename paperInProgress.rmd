@@ -38,6 +38,11 @@ cvplot$IVFE <- ifelse(data$lipids == 1, "Yes", "No")
 cvplot <- melt(cvplot, id = "IVFE")
 ```
 
+## Abstract
+
+Intravenous fat emulsions are a common means of supplying essential nutritions to critically ill patients who are not capable of eating on their own.  Studies have shown lipid emulsion treatment is a therapy with risk. This study investigates the effects of the use of soybean based Intravenous fat emulsions on the odds of contracting hospital-acquired infections. This is accomplished in a novel retrospective approach using a cohort of patients who had a stay of greater than three days in the surgical intensive care unit. Of which, 538 patients received lipid emulsions and 1307 didn’t. The authors constructed multiple statistical models for the investigated infections accounting for potential confounders using logistic regression. The study found that lipid emulsion treatment was significantly associated with hospital-acquired bloodstream (odds ratio: 1.9 95% CI [1.03, 3.30]), lower respiratory (odds ratio: 13, 95% CI [2.88, 58.60]), gastrointestinal (odds ratio: 3.5 95% CI [1.75, 7.00]) and surgical site (odds ratio: 2.6 95% CI [1.47, 4.80]) infections. These results suggest that soybean-based lipid emulsions are associated with an increased risk of contracting the aforementioned infections. As a result, they should only be used as a last resort treatment. 
+
+
 ## Introduction and Background
 
 Lipid emulsions are a means to provide nutrients to patients that are unable to eat due to severe trauma or prolonged sedation by delivering essential fatty acids intravenously 1. Intravenous fat emulsions (IVFE) have also proved an effective therapy for cardiovascular collapse onset by an overdose of local anesthetic2. Previous studies establish that lipid emulsions can increase the risk for complicating infections for small prospectively selected cohorts of patients by as much as a factor of five1, 3, 4.  This study seeks to establish if lipid emulsions should be withheld as a therapy of last resort.
@@ -46,7 +51,9 @@ The negative side effects of lipid emulsions manifest themselves in different wa
   
 There is a link between hospital acquired infections and increased inpatient length of stay8, 9, but there is more than one way to acquire an infection in the hospital. While the tie between IVFE’s and infection risk is a direct one1, 6, 7, this may not be the case for the length of stay, as it is a noisy metric10. There are many external factors, such as staffing11 and the use of residents during the course of care12, that can affect the length of stay within a hospital. Hospitals are also subject to different cost and capacity pressures that add variability to the average length of stay between hospitals13. Workflow and the enforcement of evidence based care pathways also affects the length of stay14 and those practices vary between institutions15. The deviation in length of stay both within and between institutions make it an imperfect outcome measure in the context of assessing the risk of lipid emulsions. 
   
-The state of current research establishes that the use of a lipid emulsion, its chemical composition, and its flow rate all may play a factor in patient complications. This study aims to evaluate how the use of soy based lipid emulsion affects the rates of acquiring different etiological categories of infection. 
+The risk of acquiring an infection in the hospital is not related to IVFE treatment alone. The use of a ventilator increases a patient’s risk for pneumonia and other infections16, 17, 18. This establishes intubation as a confounding variable when assessing infection risk. Reflexively, the longer a patient stays in a hospital the greater their risk for acquiring an infection they were not admitted with19, 20. Thus, time within the hospital is also an important factor to account for. 
+
+  The state of current research establishes that the use of a lipid emulsion, its chemical composition, and its flow rate all may play a factor in patient complications. This study aims to evaluate how the use of soy based lipid emulsion affects the odds of acquiring different etiological categories of infection. 
 
 
 ---
