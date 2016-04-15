@@ -1,5 +1,5 @@
 ---
-title: "Super Cool Paper"
+title: "The effects of IVFE treatment on hospital-acquired infections in critically-ill patients"
 author: "Matthew Lennart, Lisa Lin, Nick Strayer"
 date: "April 11, 2016"
 output:
