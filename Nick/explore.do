@@ -136,6 +136,22 @@ graph combine bsi gi lri pneu ssi uti
 logistic Bsiinf i.indicator bmi glucose apache2 i.Gender age i.Giinf i.Lriinf i.Pneuinf i.Ssiinf i.Utiinf ventdaysunit ventdayshosp unitlos
 logistic Lriinf i.indicator bmi glucose apache2 i.Gender age venttotal
 logistic Pneuinf i.indicator bmi glucose apache2 i.Gender age venttotal unitlos
-logistic Giinf i.indicator bmi glucose apache2 i.Gender age i.Lriinf i.Bsiinf i.Pneuinf i.Utiinf unitlos hosplos ventdaysunit ventdayshosp 
+logistic Giinf  i.indicator bmi glucose apache2 i.Gender age i.Lriinf i.Bsiinf i.Pneuinf i.Utiinf unitlos hosplos ventdaysunit ventdayshosp 
 logistic Ssiinf i.indicator bmi glucose apache2 i.Gender age i.Lriinf i.Bsiinf i.Pneuinf i.Utiinf 
 logistic Utiinf i.indicator bmi glucose apache2 i.Gender age 
+
+
+logistic bsi        i.lipids glucose ventdayshosp unitlos
+estat gof, group(10)
+logistic lri        i.lipids ventdayshosp  //too small. 
+estat gof, group(10)
+logistic pneu       i.lipids ventdayshosp unitlos apache2
+estat gof, group(10)
+logistic gi         i.lipids glucose apache2 ventdayshosp  
+estat gof, group(3)
+logistic ssi        i.lipids glucose apache2 bmi 
+estat gof, group(4)
+logistic uti        i.lipids glucose apache2 bmi hosplos
+estat gof, group(3)
+
+logistic hospdeath  i.lipids bmi glucose apache2

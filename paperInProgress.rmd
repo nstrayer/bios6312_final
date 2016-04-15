@@ -1,27 +1,53 @@
 ---
-title: "Source of Data"
-author: "Nick Strayer"
+title: "Super Cool Paper"
+author: "Matthew Lennart, Lisa Lin, Nick Strayer"
 date: "April 11, 2016"
-bibliography: bibliography.bib
 output:
   pdf_document:
+    fig_caption: yes
     fig_height: 3
     fig_width: 5
+graphics: yes
+bibliography: bibliography.bib
 ---
 
-```{r, echo=FALSE,warning=FALSE}
+```{r, echo = FALSE, warning=FALSE,include=FALSE}
+library(ggplot2)
+library(GGally)
 library(knitr)
+library(pastecs)
+library(reshape)
+
+data <- read.csv("/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/ivfedata-2013_full.csv")
+
+#y n columns
+y_n_cols <- c("hosp.death","unit.death", "bsi.inf","eent.inf","gi.inf",
+              "lri.inf","pneu.inf","ssi.inf","sst.inf","sys.inf","uti.inf")
+
+#recode y and n values to 0=N, 1 = Y. 
+data[, y_n_cols] = ifelse(data[, y_n_cols] == "N", 0, 1)
+
+#make a binary column for if the patient recieved lipids during stay. 
+data$lipids = ifelse(data$avgexp >  0.0, 1, 0)
+y_n_cols = c("lipids",y_n_cols) #add this to the dichotomous variables now. 
+
+cvs <- c("avgexp", "maxexp", "age", "bmi", "glucose" , "hosp.los", "unit.los",
+                          "ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2") 
+cvplot <- data[, cvs]
+cvplot$IVFE <- ifelse(data$lipids == 1, "Yes", "No")
+cvplot <- melt(cvplot, id = "IVFE")
 ```
 
 ## Introduction and Background
 
-Lipid emulsions are a means to provide nutrients to patients that are unable to eat due to severe trauma or prolonged sedation by delivering essential fatty acids intravenously 1. Lipid emulsions have also proved an effective therapy for cardiovascular collapse onset by an overdose of local anesthetic2. Previous studies establish that lipid emulsions can increase the risk for complicating infections for small prospectively selected cohorts of patients by as much as a factor of five1, 3, 4.  This study seeks to establish if lipid emulsions should be withheld as a therapy of last resort.
-  
-The negative side effects of lipid emulsions manifest themselves in different ways. The mechanisms range from acting as an immunosuppressant in patients with severe trauma3, 5 to rendering patients hyperglycemic, which is well correlated with increased infection risk4. The lipid emulsion formula can promote the growth of blood based, gastrointestinal, repertory, and skin site bacterial infections1, 6, 7. Infection rates can differ based on the formulation of the emulsion, whether it be soy based, coconut based, olive based, or fish based5. The flow rate of an emulsion also may affect infection rates4. 
-  
-The state of current research establishes that the use of a lipid emulsion, its chemical composition, and its flow rate all may play a factor in patient complications. This study aims to answer how the use of soy based lipid emulsion affects the rates of acquiring different etiological categories of infection. It will also explore the extent to which the flow rate of an emulsion affects infection rate. 
+Lipid emulsions are a means to provide nutrients to patients that are unable to eat due to severe trauma or prolonged sedation by delivering essential fatty acids intravenously 1. Intravenous fat emulsions (IVFE) have also proved an effective therapy for cardiovascular collapse onset by an overdose of local anesthetic2. Previous studies establish that lipid emulsions can increase the risk for complicating infections for small prospectively selected cohorts of patients by as much as a factor of five1, 3, 4.  This study seeks to establish if lipid emulsions should be withheld as a therapy of last resort.
 
-__To come, last paragraph of intro on methods__
+The negative side effects of lipid emulsions manifest themselves in different ways. The mechanisms range from acting as an immunosuppressant in patients with severe trauma3, 5 to rendering patients hyperglycemic, which is well correlated with increased infection risk4. The lipid emulsion formula can promote the growth of blood based, gastrointestinal, respiratory, and skin site bacterial infections1, 6, 7. Infection rates can differ based on the formulation of the emulsion, whether it be soy based, coconut based, olive based, or fish oil based5. The flow rate of an emulsion also may affect infection rates4. 
+  
+There is a link between hospital acquired infections and increased inpatient length of stay8, 9, but there is more than one way to acquire an infection in the hospital. While the tie between IVFE’s and infection risk is a direct one1, 6, 7, this may not be the case for the length of stay, as it is a noisy metric10. There are many external factors, such as staffing11 and the use of residents during the course of care12, that can affect the length of stay within a hospital. Hospitals are also subject to different cost and capacity pressures that add variability to the average length of stay between hospitals13. Workflow and the enforcement of evidence based care pathways also affects the length of stay14 and those practices vary between institutions15. The deviation in length of stay both within and between institutions make it an imperfect outcome measure in the context of assessing the risk of lipid emulsions. 
+  
+The state of current research establishes that the use of a lipid emulsion, its chemical composition, and its flow rate all may play a factor in patient complications. This study aims to evaluate how the use of soy based lipid emulsion affects the rates of acquiring different etiological categories of infection. 
+
 
 ---
 
@@ -42,7 +68,7 @@ Variables <- data.frame(avgexp = "Average amount of soybean oil IVFE received by
                         gender = "Gender",
                         race = "Race", 
                         bmi = "Body mass index (weight divided by height squared)",
-                        apache2 = "Apache 2 score at admission; a disease severity score",
+                        apache2 = "Acute Physiology and Chronic Health Evaluation Score at Admission",
                         glucose = "Blood glucose level at admission", 
                         hosp.los = "Hospital length of stay",
                         hosp.death = "Indicator of death in the hospital", 
@@ -74,8 +100,127 @@ kable(Variables[,c("Variable", "Description")])
 Potential confounders for infection outcomes: total ventilator days (blood, gastrointenstinal, lower-resperatory, pnuemonia), length of stay (blood, gastrointenstinal), unit length of stay (pnuemonia), hospital length of stay (Urinary Tract).
 
 
-This is a sample paragraph that needs a citation [@wanten2007immune]
+---
 
+## Statistical Methods: 
+
+The primary outcome was the status of various infections in a patient’s medical record. All the infections were assumed to be hospital-acquired. All outcomes were recorded as binary result (infection or not). The primary predictor was a dichotomized indicator of lipid emulsion treatment during the first 3 days of a patient’s SICU stay. The basic demographics of the two groups were analyzed and compared. The analysis was done in statistical software STATA [@stataCite]. Logistic regression was performed for the binary outcomes. The rule of thumb of 10 to 20 events occurring for each additional variable in the model was considered for outcomes selection and models building. A P-value cutoff of 0.05 was used for significance. In addition confidence intervals of odds ratio are reported. To assess model fit a Hosmer-Lemeshow chi-square goodness of fit test was performed on each model [@hosmer1997comparison]. 
+
+---
+
+## Results
+
+The study divided the patients into two groups, a cohort that received lipids intravenously at some point during their admission and a control group that did not. The summary statistics from Table 2 suggest that the secondary variables: age, APACHE II score, gender, and BMI are balanced in proportion between the IVFE group and the control group. The confounding variables of total encounter length of stay, SICU length of stay, and total number of days on a ventilator are all unevenly distributed across the cohort and control groups. These variables are well established in the medical literature as contributing risk factors for hospital acquired infections. [CITATIONS]
+
+Table: Patient Statistics.
+
+|                              |       Lipids| median|||     No Lipid| median|
+|:-----------------------------|------------:|------:|---|---|------------:|------:|
+|Gender Female                 | 225 (42%)   |       |||   516 (39%) |       |
+|Gender Male                   | 313 (58%)   |       |||   791 (61%) |       |
+|Age                           | 58.66 ± 1.27|  60.16||| 58.39 ± 0.84|   59.4|
+|BMI                           | 28.71 ± 0.77|  26.63||| 27.84 ± 0.44|   26.1|
+|Glucose Level                 | 170.55 ± 5.1| 160.00||| 189.73 ± 3.8|  176.0|
+|Hospital Length of Stay       | 21.19 ± 1.19|  17.17||| 14.44 ± 0.72|   10.2|
+|Unit Length of Stay           | 11.49 ± 0.84|   8.16|||  6.97 ± 0.36|    4.8|
+|Days on Ventilator (Hospital) | 11.56 ± 1.06|   7.00|||  5.96 ± 0.58|    2.0|
+|Days on Ventilator (Unit)     |  8.52 ± 0.88|   4.81|||  3.38 ± 0.39|    0.9|
+
+*Gender is presented as a count (percentage of lipids group), all others are average with 95% confidence intervals and medians. BMI = Weight(KG)/Height(M)$^2$.*
+
+The similarity in the distribution of the secondary variables between the groups is further visualized in Figure 1. The figure suggests that these elements are well controlled for, and the study’s models need not account for them. 
+
+```{r, warning=FALSE, echo=FALSE, fig.height=6.5, fig.width=10, fig.align='center',fig.cap="Distribution of continious variables."}
+ggplot(cvplot, aes(value, fill = IVFE)) +
+  geom_histogram(aes(y =..count..),position = "identity", bins = 28, alpha = 0.5) + 
+  facet_wrap(~variable, scales = "free") + theme_bw() 
+```
+
+The outcome variables are not evenly distributed between case and control groups. The systemic, skin structure, and otolaryngology (Ear, Nose and Throat) infections did not meet the minimum threshold of 20 cases needed for sufficient power[CITATION]. The study did not attempt to model the effect of lipid emulsion on the risk of these infections.  
+
+Table: Lipid Occurance and Infections. 
+
+|                  | Occured| Did not Occur|
+|:-----------------|-------:|-------------:|
+|Lipid Emulsion                    |    1307|           538|
+|Death in Hospital                 |    1683|           162|
+|Death in Unit                     |    1740|           105|
+|Blood Stream infection            |    1791|            54|
+|Eye, Ear, Nose, Throat infection  |    1844|             1|
+|Gastrointestinal  infection       |    1806|            39|
+|Lower Resperatory infection       |    1831|            14|
+|Pneumonia                         |    1706|           139|
+|Surgical site infection           |    1796|            49|
+|Skin structure infection          |    1844|             1|
+|Systemic infection                |    1845|          1845|
+|Urinary tract infection           |    1806|            39|
+
+The confounding variables did not show signs of colinearity, as evidenced in Figure 2. This indicates that the model does not need interaction terms. Additionally the study was unable to conclude any significant marginal interactions between its predictors. 
+
+```{r, fig.width=9, fig.height=9, echo=FALSE, fig.cap="Relationships between potential confounders."}
+controls = c("bmi", "glucose", "apache2", "gender", "age") 
+plt <- ggpairs(data[, controls])
+# we have to supress some dumb binwidth warnings that we cant fix because this is a wrapper function.
+suppressMessages(print(plt))
+# plot(data[, controlsin])
+```
+
+The study found that the use of a lipid emulsion increased the risk for hospital acquired blood-stream infections, lower-respiratory infections, surgical-site infections, and gastrointestinal infections. Lipid emulsions were not found to significantly affect the risk for hospital acquired pneumonia or urinary-tract infections. More information on these results including confidence interval bands for the odds ratios are shown in Table 3.   
+
+Table: Model odds ratios.
+
+|Infection Type    | Odds Ratio| 95% CI Lower| 95% CI Upper| P-Value| Hosmer-Lemeshow chi2 | 
+|:-----------------|----------:|------------:|------------:|-------:|-------:|
+|Bloodstream       |        1.9|         1.03|          3.3|   0.038|  0.021 |
+|Lower respiratory |       13.0|         2.88|         58.6|   0.001|  0.003 |
+|Pneumonia         |        1.5|         0.99|          2.3|   0.058| <0.001 |
+|Gastrointestinal  |        3.5|         1.75|          7.0|  <0.001|  0.081 |
+|Surgical site     |        2.6|         1.47|          4.8|   0.001|  0.354 |
+|UTI               |        1.7|         0.87|         3.36|   0.121|  0.068 |
+
+*Hosmer-Lemeshow chi2 [@hosmer1997comparison] Figure 3 graphically displays these results*
+
+```{r, echo=FALSE, fig.align='center', fig.cap="Odds Ratios and Confidence Intervals by Infection"}
+variable = c("bmi", "glucose", "apache2", "race", "gender", "age")
+upper    = rnorm(length(variable))
+pe       = upper - abs(rnorm(length(variable)))
+lower    = pe - abs(rnorm(length(variable)))
+res      = data.frame(variable, upper, pe, lower)
+
+oddsRatios = data.frame("OR" = numeric(), "LB" = numeric(), "UB" = numeric())
+bsi  = c(1.854255,  1.034365, 3.324032)
+lri  = c(12.99292,  2.882816, 58.55939)
+pneu = c(1.500226, .9861769, 2.282224)
+gi   = c(3.498232, 1.746571, 7.006658)
+ssi  = c(2.644907, 1.468381, 4.764111)
+oddsRatios = rbind(oddsRatios, bsi, lri, pneu, gi,ssi)
+oddsRatios$infection = c( "Bloodstream", "Lower Respiratory", "Pneumonia", "Gastrointestinal","Surgical Site")
+names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
+
+# oddsRatios = rbind(oddsRatios, bsi, pneu, gi,ssi)
+# oddsRatios$infection = c( "bsi", "pneu", "gi","ssi")
+# names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
+
+ggplot(oddsRatios, aes(x = Infection, ymin = LB, y = OR, ymax = UB)) + 
+  geom_pointrange(shape = 1) + geom_hline(yintercept = 1) + 
+  labs(x = "", y = "95% Confidence Interval") + 
+  coord_flip() 
+```
+
+
+## Discussion 
+
+These models suggest that IVFE treatment should be saved as a last resort. There are significant increases in the odds of contracting the majority of hospital acquired infections observed in this study. This is consistent with previous studies of IVFE complications. By reserving this therapy as a last result, these results can help guide the standard of care practices to reduce the rate of hospital-contracted infections and by result, shorten length of stay for critically ill patients [@mcclave2009guidelines]. This has the potential to make care safer and more cost efficient [CITATION]. 
+
+One of the strengths of the study is its incorporation of significant confounding variables such as the number of days intubated and length of stay. These confounders are largely absent from previous research. It has been shown that mechanical ventilation is a risk factor for Pneumonia and Lower Respiratory Infection [@craven1986risk].
+
+Another strength is to consider the causal pathways when selecting outcomes. Hospital length of stay and ICU length of stay were shown to be primary outcomes from previous studies [@battistella1997prospective]. However, it has been shown that infection status is correlated to increased hospital length of stay [@mcclave2009guidelines]. Thus, if these variables were treated as outcomes, we will overestimate the association between primary predictor and outcomes. 
+
+The major limitations of the study includes the dichotomization of the main predictor, few events observed for certain infections and its retrospective nature. By dichotomizing the main predictor, we are losing some information; however, the data are highly skewed with a majority of values at zero (see figure 1, first panel).  The skewness of the data will potentially introduce bias for the analysis.
+ 
+Due to the nature of logistic regression, infection events with very few observations are not able to be modeled properly. For some infections investigated, the number of events observed were below the threshold for modeling. Therefore, the potential association of main predictor and these events is not able to be confidently inferred. 
+
+Due to confidentiality, the client did not disclose the origins of the institutions for the patients. This may lead to some potential bias in patients selection. 
 
 
 # References

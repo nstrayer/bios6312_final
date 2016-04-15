@@ -1,154 +1,68 @@
 ---
-title: "Lipids Exploration"
+title: "Results"
 author: "Nick Strayer"
-date: "April 4, 2016"
-output:
-  pdf_document:
-    fig_height: 3
-    fig_width: 5
----
-```{r, echo = FALSE, warning=FALSE,include=FALSE}
-library(ggplot2)
-library(knitr)
-library(pastecs)
-library(reshape)
-```
-
-First we read data in 
-```{r}
-data <- read.csv("/Users/Nick/Dropbox/vandy/regression/bios6312_final/data/ivfedata-2013_full.csv")
-```
-
-Now we recode the columns whos values are simply Ys and Ns to 1 and 0s respectively. 
-```{r}
-#y n columns
-y_n_cols <- c("hosp.death","unit.death", "bsi.inf","eent.inf","gi.inf",
-              "lri.inf","pneu.inf","ssi.inf","sst.inf","sys.inf","uti.inf")
-
-#recode y and n values to 0=N, 1 = Y. 
-data[, y_n_cols] = ifelse(data[, y_n_cols] == "N", 0, 1)
-```
-
-We have a large portion of lipids users who have no exposure. 
-```{r}
-ggplot(data, aes(avgexp)) + geom_histogram(binwidth = 0.05)
-```
-
-Because of this we will dichotomize on the exposure variable for logistic regression. 
-
-```{r}
-#make a binary column for if the patient recieved lipids during stay. 
-data$lipids = ifelse(data$avgexp >  0.0, 1, 0)
-y_n_cols = c("lipids",y_n_cols) #add this to the dichotomous variables now. 
-```
-
+date: "April 14, 2016"
+output: pdf_document
 ---
 
-\newpage
+## Results
 
-# Continious Variables
+The study divided the patients into two groups, a cohort that received lipids intravenously at some point during their admission and a control group that did not. The summary statistics from Table 1 suggest that the secondary variables: age, APACHE II score, gender, and BMI are balanced in proportion between the IVFE group and the control group. The confounding variables of total encounter length of stay, SICU length of stay, and total number of days on a ventilator are all unevenly distributed across the cohort and control groups. These variables are well established in the medical literature as contributing risk factors for hospital acquired infections. [CITATIONS]
 
-## Table of Descriptive Statistics
-```{r}
-continiuousVariables1 <- c("avgexp", "maxexp", "age", "bmi", "glucose", "hosp.los", "unit.los") 
-continiuousVariables2 <- c("ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2") 
+Table: Patient Statistics.
+|              |       Lipids| median|||     No Lipid| median|
+|:-------------|------------:|------:|---|---|------------:|------:|
+|Age           | 58.66 ± 1.27|  60.16||| 58.39 ± 0.84|   59.4|
+|BMI           | 28.71 ± 0.77|  26.63||| 27.84 ± 0.44|   26.1|
+|Glucose Level      | 170.55 ± 5.1| 160.00||| 189.73 ± 3.8|  176.0|
+|Hospital Length of Stay      | 21.19 ± 1.19|  17.17||| 14.44 ± 0.72|   10.2|
+|Unit Length of Stay     | 11.49 ± 0.84|   8.16|||  6.97 ± 0.36|    4.8|
+|Days on Ventilator (Hospital) | 11.56 ± 1.06|   7.00|||  5.96 ± 0.58|    2.0|
+|Days on Ventilator (Unit)|  8.52 ± 0.88|   4.81|||  3.38 ± 0.39|    0.9|
+|Apache Score       | 18.97 ± 0.55|  18.00|||  17.2 ± 0.33|   17.0|
 
-options(digits=2)
-kable(stat.desc(data[, continiuousVariables1], basic=F))
-kable(stat.desc(data[, continiuousVariables2], basic=F))
-```
+* \BMI = Weight(KG)/Height(M)$^2$.*
 
-## Plot of histograms
-```{r, warning=FALSE, fig.width=10, fig.height=9}
-cvs <- c("avgexp", "maxexp", "age", "bmi", "glucose" , "hosp.los", "unit.los",
-                          "ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2") 
-cvplot <- data[, cvs]
-cvplot <- melt(cvplot)
+The similarity in the distribution of the secondary variables between the groups is further visualized in Figure 1. The figure suggests that these elements are well controlled for, and the study’s models need not account for them. 
 
-ggplot(cvplot, aes(value)) +
-  geom_histogram(aes(y =..density..), col="black", alpha = 0.5) + 
-  facet_wrap(~variable, scales = "free") + 
-  geom_density(color = "steelblue")
-```
+>>Figure 1<<
 
----
+  The outcome variables are not evenly distributed between case and control groups. The systemic, skin structure, and otolaryngology (Ear, Nose and Throat) infections did not meet the minimum threshold of 20 cases needed for sufficient power[CITATION]. The study did not attempt to model the effect of lipid emulsion on the risk of these infections.  
 
-\newpage
+Table: Lipid Occurance and Infections. 
 
-#Dichotomous Variables
+|                  | Occured| Did not Occur|
+|:-----------------|-------:|-------------:|
+|Lipid Emulsion                    |    1307|           538|
+|Death in Hospital                 |    1683|           162|
+|Death in Unit                     |    1740|           105|
+|Blood Stream infection            |    1791|            54|
+|Eye, Ear, Nose, Throat infection  |    1844|             1|
+|Gastrointestinal  infection       |    1806|            39|
+|Lower Resperatory infection       |    1831|            14|
+|Pneumonia                         |    1706|           139|
+|Surgical site infection           |    1796|            49|
+|Skin structure infection          |    1844|             1|
+|Systemic infection                |    1845|          1845|
+|Urinary tract infection           |    1806|            39|
 
-## Outcomes plot: 
-```{r, fig.width=7, fig.height=5.5}
-tp <- melt(data[, y_n_cols])
-ggplot(data.frame(table(tp)), aes(x = 1, y = Freq, fill = value)) + 
-  geom_bar(stat="identity", position=position_stack()) + 
-  facet_wrap( ~ variable) + labs(x = "")
-```
+The confounding variables did not show signs of colinearity, as evidenced in Figure 2. This indicates that the model does not need interaction terms. Additionally the study was unable to conclude any significant marginal interactions between its predictors. 
 
-```{r}
-stats <- data.frame( no_occur = integer(), occur = integer())
-for(i in 1:length(y_n_cols)) stats[i,] <- table(data[, y_n_cols[i]])
-rownames(stats) <- c("Lipid Emulsion", "Death in Hospital","Death in Unit", "bsi.inf","eent.inf","gi.inf","lri.inf","pneu.inf","ssi.inf","sst.inf","sys.inf","uti.inf")
-kable(stats, col.names= c("Occured", "Did not Occur"))
-```
+>>Figure 2<<
 
+	The study found that the use of a lipid emulsion increased the risk for hospital acquired blood-stream infections, lower-respiratory infections, surgical-site infections, and gastrointestinal infections. Lipid emulsions were not found to significantly affect the risk for hospital acquired pneumonia or urinary-tract infections. More information on these results including confidence interval bands for the odds ratios are shown in Table 3.   
 
----
+Table: Model odds ratios.
 
-\newpage
+|Infection Type    | Odds Ratio| 95% CI Lower| 95% CI Upper| P-Value| Hosmer-Lemeshow chi2 | 
+|:-----------------|----------:|------------:|------------:|-------:|-------:|
+|Bloodstream       |        1.9|         1.03|          3.3|   0.038| 0.021 |
+|Lower respiratory |       13.0|         2.88|         58.6|   0.001| 0.003 |
+|Pneumonia         |        1.5|         0.99|          2.3|   0.058| <0.001|
+|Gastrointestinal  |        3.5|         1.75|          7.0|  <0.001| 0.081 |
+|Surgical site     |        2.6|         1.47|          4.8|   0.001| 0.354 |
+|UTI               |        1.7|         0.87|         3.36|   0.121| 0.068 |
 
-## Big Scatterplots
+*Hosmer-Lemeshow chi2 [@hosmer1997comparison] Figure 3 graphically displays these results*
 
-### Looking at relationships between variables. 
-```{r, fig.width=11, fig.height=10}
-demoCols  <- c("avgexp",  "age",	"gender",	"bmi",	"hosp.los",	"hosp.death",	"ventdays.hosp",	"ventfree.unit",	"apache2")
-
-plot(data[,demoCols])
-```
-
-Same thing but with the variables we chose as controls in our regressions. 
-```{r, fig.width=10, fig.height=9}
-controls = c("bmi", "glucose", "apache2", "race", "gender", "age") 
-plot(data[, controls])
-```
-
-## Odds ratio plot
-
-```{r}
-variable = c("bmi", "glucose", "apache2", "race", "gender", "age")
-upper    = rnorm(length(variable))
-pe       = upper - abs(rnorm(length(variable)))
-lower    = pe - abs(rnorm(length(variable)))
-res      = data.frame(variable, upper, pe, lower)
-
-oddsRatios = data.frame("OR" = numeric(), "LB" = numeric(), "UB" = numeric())
-bsi  = c(1.854255,  1.034365, 3.324032)
-lri  = c(12.99292,  2.882816, 58.55939)
-pneu = c(1.500226, .9861769, 2.282224)
-gi   = c(3.498232, 1.746571, 7.006658)
-ssi  = c(2.644907, 1.468381, 4.764111)
-# oddsRatios = rbind(oddsRatios, bsi, lri, pneu, gi,ssi)
-# oddsRatios$infection = c( "bsi", "lri", "pneu", "gi","ssi")
-# names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
-
-oddsRatios = rbind(oddsRatios, bsi, pneu, gi,ssi)
-oddsRatios$infection = c( "bsi", "pneu", "gi","ssi")
-names(oddsRatios) = c("OR", "LB", "UB", "Infection") 
-
-ggplot(oddsRatios, aes(x = Infection, ymin = LB, y = OR, ymax = UB)) + 
-  geom_pointrange() + geom_hline(yintercept = 1) + 
-  labs(x = "", y = "95% CI", title = "Odds Ratios for Infections") + 
-  coord_flip() 
-```
-
-```{r}
-cvs <- c("lipids", "avgexp", "maxexp", "age", "bmi", "glucose" , "hosp.los", "unit.los",
-                          "ventdays.hosp", "ventdays.unit", "ventfree.unit", "apache2") 
-cvplot <- data[, cvs]
-cvplot <- melt(cvplot, id = "lipids")
-
-ggplot(cvplot, aes(value)) +
-  geom_histogram(aes(y =..density..), col="black", alpha = 0.5) + 
-  facet_grid(lipids~variable, scales = "free") + 
-  geom_density(color = "steelblue")
-```
+>>Figure 3<<
